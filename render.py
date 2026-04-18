@@ -40,6 +40,15 @@ def _lw(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont) -> i
     return int(draw.textlength(text, font=font))
 
 
+def _text_tracked(draw: ImageDraw.ImageDraw, pos: tuple[int, int], text: str,
+                  font: ImageFont.FreeTypeFont, spacing: int = 1) -> None:
+    """Draw text with extra letter spacing (tracking)."""
+    x, y = pos
+    for ch in text:
+        draw.text((x, y), ch, font=font, fill=BLACK)
+        x += _lw(draw, ch, font) + spacing
+
+
 def _bar(draw: ImageDraw.ImageDraw, x: int, y: int, w: int, h: int, used_pct: float) -> None:
     draw.rectangle([x, y, x + w - 1, y + h - 1], outline=BLACK, width=1)
     filled = int((w - 2) * min(used_pct, 100) / 100)
@@ -102,7 +111,7 @@ def render_image(
     date_str = now.strftime("%b %-d")
     time_str = now.strftime("%-I:%M %p")
 
-    draw.text((PAD, PAD), "Token Usage", font=fonts["title"], fill=BLACK)
+    _text_tracked(draw, (PAD, PAD), "Token Usage", fonts["title"], spacing=2)
 
     ts_w   = _lw(draw, time_str, fonts["ts"])
     date_w = _lw(draw, date_str, fonts["ts"])
