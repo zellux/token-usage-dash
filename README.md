@@ -2,7 +2,7 @@
 
 Pushes Claude and OpenAI Codex subscription plan usage to a [dot.mindreset.tech](https://dot.mindreset.tech) e-ink display as a 296×152 image.
 
-![Example display layout](docs/preview.png)
+![Token usage on e-ink display](docs/preview.jpg)
 
 ## What it shows
 
