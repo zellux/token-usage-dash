@@ -49,11 +49,25 @@ def _text_tracked(draw: ImageDraw.ImageDraw, pos: tuple[int, int], text: str,
         x += _lw(draw, ch, font) + spacing
 
 
+DOT_SPACING = 4  # one dot per NxN grid in the empty bar area
+
 def _bar(draw: ImageDraw.ImageDraw, x: int, y: int, w: int, h: int, used_pct: float) -> None:
     draw.rectangle([x, y, x + w - 1, y + h - 1], outline=BLACK, width=1)
+    # Filled portion
     filled = int((w - 2) * min(used_pct, 100) / 100)
     if filled > 0:
         draw.rectangle([x + 1, y + 1, x + filled, y + h - 2], fill=BLACK)
+    # Empty portion: dot grid anchored to bar left so pattern is consistent
+    grid_x0 = x + 1         # anchor — same for every bar
+    grid_x1 = x + w - 2
+    grid_y0 = y + 1
+    grid_y1 = y + h - 2
+    empty_x0 = grid_x0 + filled  # clip: only draw in empty region
+    margin = DOT_SPACING // 2
+    for dy in range(grid_y0 + margin, grid_y1 - margin + 1, DOT_SPACING):
+        for dx in range(grid_x0 + margin, grid_x1 - margin + 1, DOT_SPACING):
+            if dx >= empty_x0:
+                draw.point((dx, dy), fill=BLACK)
 
 
 def _draw_row(
